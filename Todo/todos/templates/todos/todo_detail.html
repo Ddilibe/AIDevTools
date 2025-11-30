@@ -1,0 +1,41 @@
+{% extends 'todos/base.html' %}
+
+{% block title %}{{ todo.title }}{% endblock %}
+
+{% block content %}
+<div class="card">
+    <div class="card-body">
+        <div class="d-flex justify-content-between align-items-start mb-4">
+            <div>
+                <h1 class="mb-2">
+                    {% if todo.completed %}✅{% else %}⭕{% endif %}
+                    {{ todo.title }}
+                </h1>
+                <p class="text-muted">
+                    Created: {{ todo.created_at|date:"M d, Y H:i" }} |
+                    Updated: {{ todo.updated_at|date:"M d, Y H:i" }}
+                </p>
+            </div>
+            <span class="badge {% if todo.completed %}bg-success{% else %}bg-warning{% endif %}">
+                {% if todo.completed %}Completed{% else %}Pending{% endif %}
+            </span>
+        </div>
+
+        {% if todo.description %}
+        <div class="mb-4">
+            <h3>Description</h3>
+            <p>{{ todo.description }}</p>
+        </div>
+        {% endif %}
+
+        <div class="d-flex gap-2">
+            <a href="{% url 'todo_update' todo.pk %}" class="btn btn-primary">✏️ Edit</a>
+            <a href="{% url 'todo_toggle' todo.pk %}" class="btn btn-outline-info">
+                {% if todo.completed %}Mark Incomplete{% else %}Mark Complete{% endif %}
+            </a>
+            <a href="{% url 'todo_delete' todo.pk %}" class="btn btn-outline-danger">🗑️ Delete</a>
+            <a href="{% url 'todo_list' %}" class="btn btn-outline-secondary">← Back</a>
+        </div>
+    </div>
+</div>
+{% endblock %}

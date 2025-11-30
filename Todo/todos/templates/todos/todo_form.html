@@ -1,0 +1,54 @@
+{% extends 'todos/base.html' %}
+
+{% block title %}{% if form.instance.pk %}Edit{% else %}Create{% endif %} Todo{% endblock %}
+
+{% block content %}
+<div class="card">
+    <div class="card-header">
+        <h2 class="mb-0">{% if form.instance.pk %}Edit Todo{% else %}Create New Todo{% endif %}</h2>
+    </div>
+    <div class="card-body">
+        <form method="post">
+            {% csrf_token %}
+            <div class="mb-3">
+                <label for="{{ form.title.id_for_label }}" class="form-label">Title</label>
+                {{ form.title }}
+                {% if form.title.errors %}
+                <div class="invalid-feedback d-block">
+                    {{ form.title.errors }}
+                </div>
+                {% endif %}
+            </div>
+
+            <div class="mb-3">
+                <label for="{{ form.description.id_for_label }}" class="form-label">Description</label>
+                {{ form.description }}
+                {% if form.description.errors %}
+                <div class="invalid-feedback d-block">
+                    {{ form.description.errors }}
+                </div>
+                {% endif %}
+            </div>
+
+            <div class="mb-3 form-check">
+                {{ form.completed }}
+                <label for="{{ form.completed.id_for_label }}" class="form-check-label">
+                    Completed
+                </label>
+                {% if form.completed.errors %}
+                <div class="invalid-feedback d-block">
+                    {{ form.completed.errors }}
+                </div>
+                {% endif %}
+            </div>
+
+            <div class="d-flex gap-2">
+                <button type="submit" class="btn btn-primary">
+                    {% if form.instance.pk %}Update{% else %}Create{% endif %} Todo
+                </button>
+                <a href="{% url 'todo_list' %}" class="btn btn-outline-secondary">Cancel</a>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

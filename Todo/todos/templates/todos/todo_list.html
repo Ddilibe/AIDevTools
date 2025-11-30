@@ -1,0 +1,82 @@
+{% extends 'todos/base.html' %}
+
+{% block title %}My Todos{% endblock %}
+
+{% block content %}
+<div class="card">
+    <div class="card-header d-flex justify-content-between align-items-center">
+        <h2 class="mb-0">My Todos</h2>
+        <a href="{% url 'todo_create' %}" class="btn btn-light btn-sm">➕ Add Todo</a>
+    </div>
+    <div class="card-body">
+        {% if todos %}
+        <div class="list-group">
+            {% for todo in todos %}
+            <div class="list-group-item todo-item {% if todo.completed %}completed{% endif %}">
+                <div class="d-flex justify-content-between align-items-start">
+                    <div class="flex-grow-1">
+                        <a href="{% url 'todo_detail' todo.pk %}" class="text-decoration-none">
+                            <h5 class="todo-title">
+                                {% if todo.completed %}
+                                ✅
+                                {% else %}
+                                ⭕
+                                {% endif %}
+                                {{ todo.title }}
+                            </h5>
+                        </a>
+                        {% if todo.description %}
+                        <p class="mb-2">{{ todo.description|truncatewords:20 }}</p>
+                        {% endif %}
+                        <small class="todo-meta">Created: {{ todo.created_at|date:"M d, Y H:i" }}</small>
+                    </div>
+                    <div class="btn-group" role="group">
+                        <a href="{% url 'todo_toggle' todo.pk %}" class="btn btn-sm btn-outline-info">
+                            {% if todo.completed %}Mark Incomplete{% else %}Mark Complete{% endif %}
+                        </a>
+                        <a href="{% url 'todo_update' todo.pk %}" class="btn btn-sm btn-outline-primary">Edit</a>
+                        <a href="{% url 'todo_delete' todo.pk %}" class="btn btn-sm btn-outline-danger">Delete</a>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+
+        <!-- Pagination -->
+        {% if is_paginated %}
+        <nav aria-label="Page navigation" class="mt-4">
+            <ul class="pagination justify-content-center">
+                {% if page_obj.has_previous %}
+                <li class="page-item">
+                    <a class="page-link" href="?page=1">First</a>
+                </li>
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ page_obj.previous_page_number }}">Previous</a>
+                </li>
+                {% endif %}
+
+                <li class="page-item active">
+                    <span class="page-link">
+                        Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}
+                    </span>
+                </li>
+
+                {% if page_obj.has_next %}
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ page_obj.next_page_number }}">Next</a>
+                </li>
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ page_obj.paginator.num_pages }}">Last</a>
+                </li>
+                {% endif %}
+            </ul>
+        </nav>
+        {% endif %}
+        {% else %}
+        <div class="alert alert-info text-center">
+            <p class="mb-0">No todos yet! <a href="{% url 'todo_create' %}">Create one</a></p>
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}
